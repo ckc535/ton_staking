@@ -17,7 +17,7 @@ export function jettonWalletConfigToCell(config: JettonWalletConfig): Cell {
 
 export class JettonWallet implements Contract {
     // COMMON
-    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
+    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) { }
 
     static createFromAddress(address: Address) {
         return new JettonWallet(address);
@@ -94,14 +94,14 @@ export class JettonWallet implements Contract {
         queryId?: number,
     ) {
         let forwardPayload = beginCell()
-                                        .storeUint(0xffffffff, 32);
+            .storeUint(0xffffffff, 32);
         if (newEndTime) {
             forwardPayload = forwardPayload.storeUint(newEndTime, 32);
         }
 
         return await this.sendTransfer(
-            provider, 
-            via, 
+            provider,
+            via,
             Gas.send_commissions + Gas.jetton_transfer,
             stakingAddress,
             Gas.receive_commissions,
@@ -118,23 +118,36 @@ export class JettonWallet implements Contract {
         jettonWalletAddress: Address,
         rewardsAmount: bigint,
         queryId?: number,
-    ){
-        let farmingSpeed = rewardsAmount / (1724025600n-1721347200n)
-        let poolcontent2 = beginCell().storeUint(1721347200,32)
-                                      .storeUint(1724025600,32)
-                                      .storeCoins(1)
-                                    .endCell()
+    ) {
+        let farmingSpeed = rewardsAmount / (1724025600n - 1721347200n)
+        let poolcontent2 = beginCell().storeUint(1721606400, 32)
+            .storeUint(1721779200, 32)
+            .storeCoins(1)
+            .storeAddress(Address.parse('0QCm9AQsmHJj21XOy_3gNGoKzo6H3MprInFD8Gtr1RHBAmw1'))
+            .storeAddress(Address.parse('kQCnLMweaavOuGVImBm0MmxcLjjBLfG9QvLH8w3Z6IvSOg3_'))
+            .storeAddress(Address.parse('EQCnLLH_GM4mG9H8e08hh0uKc0-OdplImdq0ETgNstXDjzpL'))
+            .endCell()
 
-                                    
-        let poolcontent = beginCell()
-                                     .endCell()
-        let forwardPayload = beginCell().storeUint(0xda861f17,32)
-                                        .storeAddress(jettonWalletAddress)
-                                        .storeRef(poolcontent)
-                                        .endCell()
+
+        let poolcontent = beginCell().storeRef(beginCell().endCell())
+            .storeCoins(0)
+            .storeUint(0, 256)
+            .storeUint(1, 32)
+            .storeCoins(0)
+            .storeCoins(0)
+            .storeUint(10000, 16)
+            .storeUint(0, 1)
+            .storeUint(0, 1)
+            .storeUint(0, 1)
+            .storeRef(poolcontent2)
+            .endCell()
+        let forwardPayload = beginCell().storeUint(0xda861f17, 32)
+            .storeAddress(jettonWalletAddress)
+            .storeRef(poolcontent)
+            .endCell()
         return await this.sendTransfer(
-            provider, 
-            via, 
+            provider,
+            via,
             toNano('0.5'),
             poolAdminAddress,
             toNano('0.4'),
@@ -155,12 +168,12 @@ export class JettonWallet implements Contract {
         queryId?: number,
     ) {
         let forwardPayload = beginCell()
-                                .storeUint(stakePeriod, 32)
-                                .storeBit(transferAllowed);
+            .storeUint(stakePeriod, 32)
+            .storeBit(transferAllowed);
 
         return await this.sendTransfer(
-            provider, 
-            via, 
+            provider,
+            via,
             Gas.send_commissions + Gas.jetton_transfer,
             stakingAddress,
             Gas.send_commissions,

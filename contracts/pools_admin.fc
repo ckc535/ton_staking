@@ -53,13 +53,13 @@ global cell storage::jvt_nft_code;          ;; Code of the jvt staking Bond NFT 
             .store_ref(storage::staking_pool_code)
             .store_ref(storage::nft_item_code)
             .store_ref(
-                begin_cell()
+            begin_cell()
                     .store_slice(storage::team_address)
                     .store_slice(storage::conversion_address)
                     .store_ref(storage::content_host)
                     .store_ref(storage::jvt_nft_code)
                 .end_cell()
-            )
+        )
         .end_cell()
     );
 }
@@ -215,7 +215,7 @@ slice deploy_sharecoms(slice rewards_jetton_address, slice pool_address) impure 
         (int bits, int refs) = payload.slice_bits_refs();
         if (bits != 32 + 267) { ;; inner_op + address
             send_jettons(query_id, jetton_amount, from_address, from_address, sender_address, 0, mode::carry_remaining_gas,
-                         1, begin_cell().store_uint(0, 32).store_slice("Incorrect payload").end_cell());  
+                1, begin_cell().store_uint(0, 32).store_slice("Incorrect payload").end_cell());  
             return ();
         }
 
@@ -229,19 +229,19 @@ slice deploy_sharecoms(slice rewards_jetton_address, slice pool_address) impure 
                 (refs != 1)) {
 
                 send_jettons(query_id, jetton_amount, from_address, from_address, sender_address, 0, mode::carry_remaining_gas, 1,
-                            begin_cell().store_uint(0, 32).store_slice("Not enough JVT").end_cell());
+                    begin_cell().store_uint(0, 32).store_slice("Not enough JVT").end_cell());
                 return ();
             }
 
-            ;; slice pool_content = payload~load_ref().begin_parse();   ;; user-created content of the new staking pool
-            ;; ifnot (check_pool_content(pool_content)) {
-            ;;     send_jettons(query_id, jetton_amount, from_address, from_address, sender_address, 0, mode::carry_remaining_gas, 1,
-            ;;                 begin_cell().store_uint(0, 32).store_slice("Incorrect pool content").end_cell());
-            ;;     return ();
-            ;; }
+            slice pool_content = payload~load_ref().begin_parse();   ;; user-created content of the new staking pool
+            ifnot (check_pool_content(pool_content)) {
+                send_jettons(query_id, jetton_amount, from_address, from_address, sender_address, 0, mode::carry_remaining_gas, 1,
+                    begin_cell().store_uint(0, 32).store_slice("Incorrect pool content").end_cell());
+                return ();
+            }
             slice rewards_jetton_address = payload~load_msg_addr();  ;; address of rewards jetton of the new staking pool
-            ;; slice pool_address = deploy_staking_pool(pool_content);
-            ;; slice sharecoms_address = deploy_sharecoms(rewards_jetton_address, pool_address);
+            slice pool_address = deploy_staking_pool(pool_content);
+            slice sharecoms_address = deploy_sharecoms(rewards_jetton_address, pool_address);
 
             burn_jettons(query_id, jetton_amount, storage::jvt_wallet_address, from_address, 0, mode::carry_remaining_balance);  ;; burn fees   
             return ();
@@ -269,13 +269,13 @@ slice deploy_sharecoms(slice rewards_jetton_address, slice pool_address) impure 
             slice excess_address = payload~load_msg_addr();
             ;; 10% for the team
             send_jettons(query_id, muldiv(jetton_amount, 1, 10), storage::team_address, excess_address, sender_address, gas::jetton_transfer, mode::simple, 
-                         1, begin_cell().store_uint(0, 32).store_slice("JVault team's part of commissions").end_cell());
+                1, begin_cell().store_uint(0, 32).store_slice("JVault team's part of commissions").end_cell());
             ;; 40% for conversion to JVT and burn
             send_jettons(query_id, muldiv(jetton_amount, 4, 10), storage::conversion_address, excess_address, sender_address, gas::jetton_transfer, mode::simple,
-                         1, begin_cell().store_uint(0, 32).store_slice("Conversion to JVT part of commissions").end_cell());  
+                1, begin_cell().store_uint(0, 32).store_slice("Conversion to JVT part of commissions").end_cell());  
             ;; 50% for distribution above JVT stakers 
             send_jettons(query_id, muldiv(jetton_amount, 5, 10), sharecoms_address, excess_address, sender_address, 0, mode::carry_remaining_balance,
-                         gas::update_sharecoms, begin_cell().store_uint(0, 32).store_slice("JVT stakers' part of commissions").end_cell());
+                gas::update_sharecoms, begin_cell().store_uint(0, 32).store_slice("JVT stakers' part of commissions").end_cell());
 
             return ();
         }
@@ -284,7 +284,7 @@ slice deploy_sharecoms(slice rewards_jetton_address, slice pool_address) impure 
 
             if ((jetton_amount < storage::change_content_fee) | (~ equal_slices(sender_address, storage::jvt_wallet_address)) | (refs != 2)) {
                 send_jettons(query_id, jetton_amount, from_address, from_address, sender_address, 0, mode::carry_remaining_balance,
-                             1, begin_cell().store_uint(0, 32).store_slice("Not enough JVT.").end_cell());
+                    1, begin_cell().store_uint(0, 32).store_slice("Not enough JVT.").end_cell());
                 return ();
             }
 
@@ -303,21 +303,21 @@ slice deploy_sharecoms(slice rewards_jetton_address, slice pool_address) impure 
                             .store_uint(query_id, 64)
                             .store_slice(from_address)
                             .store_ref(
-                                begin_cell()
+                begin_cell()
                                 .store_ref(
-                                    begin_cell()
+                    begin_cell()
                                         .store_slice(storage::content_host.begin_parse())
                                         .store_slice(collection_content_link.begin_parse())
                                     .end_cell()
-                                )
+                )
                                 .store_ref(
-                                    begin_cell()
+                    begin_cell()
                                         .store_slice(storage::content_host.begin_parse())
                                         .store_slice(nft_content_link.begin_parse())
                                     .end_cell()
-                                )
+                )
                                 .end_cell()
-                            );
+            );
             
             send_raw_message(msg.end_cell(), mode::carry_remaining_balance);
 

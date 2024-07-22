@@ -20,18 +20,18 @@ let gas_consumption = 14000000n
 let min_tons_for_storage = 10000000n
 let jwallet_code = new Cell();
 let minter_code = new Cell();
-let userWallet:any;
-let defaultContent:Cell;
+let userWallet: any;
+let defaultContent: Cell;
 
 
 export async function run(provider: NetworkProvider) {
-	let jettonWallet = provider.open(JettonWallet.createFromAddress(Address.parse('EQD-O0SjUGSkHPVRdKi45F0AWL72L6WxwR5ntWlT38CLxRy1')
-	
-))
-	console.log("****", jettonWallet.address)
-	let fowardPayload = beginCell().storeUint(0x1234567890abcdefn,128).endCell();
-	// await jettonWallet.sendTransfer(provider.sender(),toNano('0.05'),Address.parse('0QCm9AQsmHJj21XOy_3gNGoKzo6H3MprInFD8Gtr1RHBAmw1'),toNano('0'),toNano('17'),fowardPayload)
+    let jettonWallet = provider.open(JettonWallet.createFromAddress(Address.parse('kQADhWWL0KntmgvtZo4Omf33dkyGdOaz354rEP42z_Kue6RD')
+
+    ))
+    console.log("****", jettonWallet.address)
+    let fowardPayload = beginCell().storeUint(0x1234567890abcdefn, 128).endCell();
+    // await jettonWallet.sendTransfer(provider.sender(),toNano('0.05'),Address.parse('0QCm9AQsmHJj21XOy_3gNGoKzo6H3MprInFD8Gtr1RHBAmw1'),toNano('0'),toNano('17'),fowardPayload)
     // await jettonWallet.sendDeployNewPool(provider.sender(),Address.parse('EQCckMloBA-uMVzgLi1dXBLO9rrszo86UDrcMPayMJVCnxCd'),Address.parse('EQD-O0SjUGSkHPVRdKi45F0AWL72L6WxwR5ntWlT38CLxRy1'),toNano('10'))
     console.log(provider.sender())
-    await jettonWallet.sendDeployNewPool(provider.sender(),Address.parse('EQBv91obguvyr14VlROlBrHOp3azkqxs_xbFO6qv2c9x5qWB'),Address.parse('EQD-O0SjUGSkHPVRdKi45F0AWL72L6WxwR5ntWlT38CLxRy1'),toNano('10'))
+    await jettonWallet.sendDeployNewPool(provider.sender(), Address.parse('EQC2ukQ7YRRRaFVt-0MoUs69biCeMRgoUpXnuq4mBPwW9j0n'), Address.parse('kQADhWWL0KntmgvtZo4Omf33dkyGdOaz354rEP42z_Kue6RD'), toNano('10'))
 }
