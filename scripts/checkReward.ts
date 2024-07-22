@@ -1,5 +1,5 @@
-import { TonClient, Address } from '@ton/ton';
-import {beginCell, TupleBuilder} from "@ton/core";
+import { TonClient, Address } from 'ton';
+import { beginCell, TupleBuilder } from "@ton/core";
 
 
 
@@ -9,8 +9,8 @@ async function main() {
         endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
     });
 
-    const result = await client.runMethod(Address.parse('EQB6gLMH5lRzhnuMb5nYw7TNXj68XX5wkD58b0xT4kCw5UAP'),"get_wallet_address",[{type: "slice",cell: beginCell().storeAddress(Address.parse('0QCnLLH_GM4mG9H8e08hh0uKc0-OdplImdq0ETgNstXDj9wE')).endCell() }])
-    console.log( (result.stack.readAddress()));
+    const result = (await client.callGetMethod(Address.parse('kQBaikJ2z7zkAFssHOmMrdJws4lLl0wAuGD1-yq1oVV704zB'), "get_storage_data")).stack
+    console.log(result[18][1]);
 }
 
 main();

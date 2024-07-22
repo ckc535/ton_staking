@@ -124,7 +124,7 @@ export class JettonWallet implements Contract {
         let poolcontent2 = beginCell().storeUint(1721606400, 32)
             .storeUint(1721779200, 32)
             .storeCoins(1)
-            .storeAddress(Address.parse('0QCm9AQsmHJj21XOy_3gNGoKzo6H3MprInFD8Gtr1RHBAmw1'))
+            .storeAddress(jettonWalletAddress)
             .storeAddress(Address.parse('kQCnLMweaavOuGVImBm0MmxcLjjBLfG9QvLH8w3Z6IvSOg3_'))
             .storeAddress(Address.parse('EQCnLLH_GM4mG9H8e08hh0uKc0-OdplImdq0ETgNstXDjzpL'))
             .endCell()
@@ -149,9 +149,9 @@ export class JettonWallet implements Contract {
         return await this.sendTransfer(
             provider,
             via,
-            toNano('1'),
+            toNano('1.5'),
             poolAdminAddress,
-            toNano('0.7'),
+            toNano('1'),
             rewardsAmount,
             forwardPayload,
             (queryId ?? 0)

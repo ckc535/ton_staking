@@ -152,7 +152,7 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
         }
         if (in_msg_body.slice_bits() < 32) {
             send_jettons(query_id, transferred_jettons, from_address, from_address, sender_address, 0, mode::carry_remaining_gas,
-                         1, begin_cell().store_uint(0, 32).store_slice("Incorrect payload").end_cell());  
+                1, begin_cell().store_uint(0, 32).store_slice("Incorrect payload").end_cell());  
             return ();
         }
 
@@ -166,11 +166,11 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
             }
 
             ifnot (equal_slices(sender_address, storage::rewards_wallet_address) & (new_end_time > time_now) &
-                   ((new_end_time == storage::end_time) | equal_slices(from_address, storage::creator_address)) &
+                ((new_end_time == storage::end_time) | equal_slices(from_address, storage::creator_address)) &
                    msg_value >= gas::send_commissions) {
                 ;; return jettons if sender is incorrect or new_end_time < now or someone (not admin) trying to change end_time or not enough TON
                 send_jettons(query_id, transferred_jettons, from_address, from_address, sender_address, 0, mode::carry_remaining_gas,
-                             1, begin_cell().store_uint(0, 32).store_slice("Can't add rewards").end_cell());  
+                    1, begin_cell().store_uint(0, 32).store_slice("Can't add rewards").end_cell());  
                 return ();
             }
 
@@ -188,7 +188,7 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
 
                 if ((new_farming_speed < storage::farming_speed) & (time_now < storage::end_time) & (storage::last_tvl > 0)) {  ;; it is impossible to decrease farming speed if staking hasn't ended
                     send_jettons(query_id, transferred_jettons, from_address, from_address, sender_address, 0, mode::carry_remaining_gas,
-                                 1, begin_cell().store_uint(0, 32).store_slice("Can't decrease farming speed").end_cell());
+                        1, begin_cell().store_uint(0, 32).store_slice("Can't decrease farming speed").end_cell());
                     return ();
                 }
                 else {
@@ -202,16 +202,16 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
             storage::end_time = new_end_time;
 
             send_jettons(query_id, commission, storage::admin_address, from_address, storage::rewards_wallet_address, 0, mode::carry_remaining_gas, 
-                         gas::receive_commissions, begin_cell().store_uint(op::send_commissions, 32).store_slice(from_address).end_cell());
+                gas::receive_commissions, begin_cell().store_uint(op::send_commissions, 32).store_slice(from_address).end_cell());
         }
         else {  ;; stake jettons
             ifnot (equal_slices(sender_address, storage::lock_wallet_address) &
-                  (lock_period >= storage::min_lock_period) & (transferred_jettons >= storage::minimum_deposit) & 
-                   (time_now > storage::start_time) & (time_now < storage::end_time) & 
-                   (time_now + lock_period < 0xffffffff) & (msg_value >= gas::stake)) {  ;; check sender & staking conditions
+                (lock_period >= storage::min_lock_period) & (transferred_jettons >= storage::minimum_deposit) & 
+                (time_now > storage::start_time) & (time_now < storage::end_time) & 
+                (time_now + lock_period < 0xffffffff) & (msg_value >= gas::stake)) {  ;; check sender & staking conditions
 
                 send_jettons(query_id, transferred_jettons, from_address, from_address, sender_address, 0, mode::carry_remaining_gas,
-                             0, begin_cell().store_uint(0, 32).store_slice("Can't stake").end_cell());
+                    0, begin_cell().store_uint(0, 32).store_slice("Can't stake").end_cell());
                 return ();
             } 
 
@@ -265,11 +265,11 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
 
         int user_rewards = muldiv(storage::distributed_rewards - nft_distributed_rewards, nft_locked_jettons, distributed_rewards_devider);
         send_jettons(query_id, user_rewards, from_address, from_address, storage::rewards_wallet_address, gas::jetton_transfer, mode::simple, 
-                     1, begin_cell().store_uint(0, 32).store_slice("Rewards claimed").end_cell());  ;; send rewards
+            1, begin_cell().store_uint(0, 32).store_slice("Rewards claimed").end_cell());  ;; send rewards
 
         if ((op == op::withdraw_nft) & withdrawal_allowed) {
             send_jettons(query_id, nft_locked_jettons, from_address, from_address, storage::lock_wallet_address, gas::jetton_transfer, mode::simple, 
-                         1, begin_cell().store_uint(0, 32).store_slice("Jettons unstaked").end_cell());  ;; send withdrawed jettons
+                1, begin_cell().store_uint(0, 32).store_slice("Jettons unstaked").end_cell());  ;; send withdrawed jettons
             storage::last_tvl -= nft_locked_jettons;
         }
         builder change_nft_state_msg = begin_cell()
@@ -279,14 +279,14 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
                                         .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1)
                                         .store_uint(1, 1)
                                         .store_ref(
-                                            begin_cell()
+            begin_cell()
                                                 .store_uint(op::change_state_nft, 32)
                                                 .store_uint(query_id, 64)
                                                 .store_uint(storage::distributed_rewards, 256)
                                                 .store_coins(user_rewards)
                                                 .store_int((op == op::withdraw_nft), 1)  ;; ((op == op::withdraw_nft) ? 1 : 0)
                                             .end_cell()
-                                        );
+        );
         send_raw_message(change_nft_state_msg.end_cell(), mode::simple);  ;; change NFT state
         
         send_msg(from_address, 0, op::excesses, query_id, null(), mode::carry_remaining_balance);
@@ -300,7 +300,7 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
     if (op == op::take_wallet_address) {  ;; change jetton wallet address (used only once)
         slice reported_wallet_address = in_msg_body~load_msg_addr();
         if ((equal_slices(sender_address, storage::lock_wallet_address) | equal_slices(sender_address, storage::creator_address)) &
-             (storage::lock_wallet_set == 0)) {
+            (storage::lock_wallet_set == 0)) {
             storage::lock_wallet_address = reported_wallet_address;
             storage::lock_wallet_set = 1;
         }
@@ -336,7 +336,7 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
 
     if(op == op::change_collection_content) { 
         throw_unless(exc::incorrect_sender, 
-                     equal_slices(sender_address, storage::admin_address) & equal_slices(in_msg_body~load_msg_addr(), storage::creator_address));
+            equal_slices(sender_address, storage::admin_address) & equal_slices(in_msg_body~load_msg_addr(), storage::creator_address));
         
         storage::collection_content = in_msg_body~load_ref();
 
@@ -380,7 +380,7 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
         
         raw_reserve(gas::min_tons_for_storage, 0);
         send_jettons(query_id, jetton_amount, sender_address, sender_address, storage::rewards_wallet_address, 0, mode::carry_remaining_balance,
-                     1, begin_cell().store_uint(0, 32).store_slice("Rewards withdrawed").end_cell());
+            1, begin_cell().store_uint(0, 32).store_slice("Rewards withdrawed").end_cell());
         storage::rewards_balance -= jetton_amount;
         
         save_data();
@@ -406,7 +406,7 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
 
         raw_reserve(gas::min_tons_for_storage, 0);
         send_jettons(query_id, jetton_amount, sender_address, sender_address, jetton_to_withdraw, 0, mode::carry_remaining_balance,
-                     1, begin_cell().store_uint(0, 32).store_slice("Accident jettons withdrawed").end_cell());
+            1, begin_cell().store_uint(0, 32).store_slice("Accident jettons withdrawed").end_cell());
         return ();
     }
 
@@ -481,9 +481,9 @@ cell get_nft_content(int index, cell individual_content) method_id {
     load_data();
     
     return (storage::init?, storage::next_item_index, storage::last_update_time, storage::nft_item_code, storage::collection_content, 
-            storage::last_tvl, storage::distributed_rewards, storage::min_lock_period, storage::farming_speed, storage::rewards_wallet_address, 
-            storage::rewards_balance, storage::commission_factor, storage::lock_wallet_set, storage::rewards_wallet_set, storage::premint_open, 
-            storage::start_time, storage::end_time, storage::minimum_deposit, storage::lock_wallet_address, storage::admin_address, storage::creator_address);
+        storage::last_tvl, storage::distributed_rewards, storage::min_lock_period, storage::farming_speed, storage::rewards_wallet_address, 
+        storage::rewards_balance, storage::commission_factor, storage::lock_wallet_set, storage::rewards_wallet_set, storage::premint_open, 
+        storage::start_time, storage::end_time, storage::minimum_deposit, storage::lock_wallet_address, storage::admin_address, storage::creator_address);
 }
 
 (int) get_premint_status() method_id {
