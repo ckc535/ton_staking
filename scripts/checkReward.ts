@@ -1,4 +1,6 @@
-import { TonClient, Address,safeSign,Slice } from 'ton';
+import { TonClient, Address } from '@ton/ton';
+import {beginCell, TupleBuilder} from "@ton/core";
+
 
 
 async function main() {
@@ -7,12 +9,8 @@ async function main() {
         endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
     });
 
-    // Call get method
-    // const result = await client.callGetMethod(Address.parse('EQCx3qcLcDHLLKQKPVsaxA9NoGKI8J0gNfiyQW-AQnxBhKSf'),'get_storage_data')
-    // console.log(parseInt(result.stack[10][1],16));
-    // console.log('Total:', total);
-    const result = await client.callGetMethod(Address.parse('kQDJmQtqINS1Py8ccr3A_hK3flKTfwwCWuzBs01W_rxnTSWe'),'get_creation_fee')
-    console.log( (result.stack));
+    const result = await client.runMethod(Address.parse('EQB6gLMH5lRzhnuMb5nYw7TNXj68XX5wkD58b0xT4kCw5UAP'),"get_wallet_address",[{type: "slice",cell: beginCell().storeAddress(Address.parse('0QCnLLH_GM4mG9H8e08hh0uKc0-OdplImdq0ETgNstXDj9wE')).endCell() }])
+    console.log( (result.stack.readAddress()));
 }
 
 main();

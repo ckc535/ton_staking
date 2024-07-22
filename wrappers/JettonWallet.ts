@@ -47,7 +47,7 @@ export class JettonWallet implements Contract {
         fwdPayload: Cell,
         queryId?: number,
     ) {
-        await provider.internal(via, {
+        let result = await provider.internal(via, {
             value: value,
             sendMode: SendMode.PAY_GAS_SEPARATELY,
             body: beginCell()
@@ -62,6 +62,7 @@ export class JettonWallet implements Contract {
                 .storeRef(fwdPayload)
                 .endCell(),
         });
+        return result;
     }
 
     async sendBurn(
@@ -111,6 +112,7 @@ export class JettonWallet implements Contract {
         )
     }
 
+
     async sendDeployNewPool(
         provider: ContractProvider,
         via: Sender,
@@ -119,7 +121,6 @@ export class JettonWallet implements Contract {
         rewardsAmount: bigint,
         queryId?: number,
     ) {
-        let farmingSpeed = rewardsAmount / (1724025600n - 1721347200n)
         let poolcontent2 = beginCell().storeUint(1721606400, 32)
             .storeUint(1721779200, 32)
             .storeCoins(1)
@@ -148,9 +149,9 @@ export class JettonWallet implements Contract {
         return await this.sendTransfer(
             provider,
             via,
-            toNano('0.5'),
+            toNano('1'),
             poolAdminAddress,
-            toNano('0.4'),
+            toNano('0.7'),
             rewardsAmount,
             forwardPayload,
             (queryId ?? 0)

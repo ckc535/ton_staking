@@ -224,7 +224,7 @@ slice deploy_sharecoms(slice rewards_jetton_address, slice pool_address) impure 
         if (inner_op == op::deploy_new_pool) {
             
             if ((jetton_amount < storage::creation_fee) | 
-                ;; (~ equal_slices(sender_address, storage::jvt_wallet_address)) | 
+                (~ equal_slices(sender_address, storage::jvt_wallet_address)) | 
                 (msg_value < gas::deploy_pool + gas::deploy_sharecoms + gas::burn_jetton) |
                 (refs != 1)) {
 

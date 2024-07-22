@@ -65,4 +65,11 @@ export class PoolsAdmin implements Contract {
             body: beginCell().endCell(),
         });
     }
+    async sendChangeJVTWalletAddress(provider: ContractProvider, via: Sender,jvtWalletAddress: Address, value: bigint) {
+        await provider.internal(via, {
+            value,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell().storeUint(14,32).storeUint(0,64).storeAddress(jvtWalletAddress).endCell(),
+        });
+    }
 }

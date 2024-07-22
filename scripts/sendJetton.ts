@@ -2,16 +2,9 @@ import {
     Address,
     beginCell,
     Cell,
-    Contract,
-    contractAddress,
-    ContractProvider,
-    Sender,
-    SendMode,
-    StateInit,
     toNano,
 } from "@ton/core";
 import { JettonWallet } from '../wrappers/JettonWallet';
-import { JettonMinter } from '../wrappers/JettonMinter';
 import { send } from 'process';
 import { compile, NetworkProvider } from '@ton/blueprint';
 
@@ -25,13 +18,14 @@ let defaultContent: Cell;
 
 
 export async function run(provider: NetworkProvider) {
-    let jettonWallet = provider.open(JettonWallet.createFromAddress(Address.parse('kQADhWWL0KntmgvtZo4Omf33dkyGdOaz354rEP42z_Kue6RD')
+    let jettonWallet = provider.open(JettonWallet.createFromAddress(Address.parse('EQD-O0SjUGSkHPVRdKi45F0AWL72L6WxwR5ntWlT38CLxRy1')
 
     ))
     console.log("****", jettonWallet.address)
     let fowardPayload = beginCell().storeUint(0x1234567890abcdefn, 128).endCell();
-    // await jettonWallet.sendTransfer(provider.sender(),toNano('0.05'),Address.parse('0QCm9AQsmHJj21XOy_3gNGoKzo6H3MprInFD8Gtr1RHBAmw1'),toNano('0'),toNano('17'),fowardPayload)
+    let result = await jettonWallet.sendTransfer(provider.sender(),toNano('0.05'),Address.parse('EQDLJuvLwgWctc1Ay_X2B20bejdw-FrD0x1yPRJZW51TQ722'),toNano('0'),toNano('0'),fowardPayload)
+    console.log(result)
     // await jettonWallet.sendDeployNewPool(provider.sender(),Address.parse('EQCckMloBA-uMVzgLi1dXBLO9rrszo86UDrcMPayMJVCnxCd'),Address.parse('EQD-O0SjUGSkHPVRdKi45F0AWL72L6WxwR5ntWlT38CLxRy1'),toNano('10'))
-    console.log(provider.sender())
-    await jettonWallet.sendDeployNewPool(provider.sender(), Address.parse('EQC2ukQ7YRRRaFVt-0MoUs69biCeMRgoUpXnuq4mBPwW9j0n'), Address.parse('kQADhWWL0KntmgvtZo4Omf33dkyGdOaz354rEP42z_Kue6RD'), toNano('10'))
+    // console.log(provider.sender())
+    // await jettonWallet.sendDeployNewPool(provider.sender(), Address.parse('kQBJ7GLVAss93JS_LUaN3b3Wfde7oIZYM-75AOlBIDqMgIWy'), Address.parse('kQADhWWL0KntmgvtZo4Omf33dkyGdOaz354rEP42z_Kue6RD'), toNano('5'))
 }
