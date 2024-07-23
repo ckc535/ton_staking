@@ -1,4 +1,4 @@
-import { TonClient, Address } from 'ton';
+import { TonClient, Address } from '@ton/ton';
 import { beginCell, TupleBuilder } from "@ton/core";
 
 
@@ -9,8 +9,8 @@ async function main() {
         endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
     });
 
-    const result = (await client.callGetMethod(Address.parse('kQBaikJ2z7zkAFssHOmMrdJws4lLl0wAuGD1-yq1oVV704zB'), "get_storage_data")).stack
-    console.log(result[18][1]);
+    const result = (await client.runMethod(Address.parse('kQDMu8HfnC_hhB7CggYfZIUvY13kJKeXPY6Ah0DQW9oMH0BT'), "get_storage_data")).stack
+    console.log(result)
 }
 
 main();

@@ -14,18 +14,20 @@ export async function run(provider: NetworkProvider) {
 
     ))
     let fowardPayload = beginCell().storeUint(0x1234567890abcdefn, 128).endCell();
-    let poolsAdminAddress = Address.parse('EQB6gLMH5lRzhnuMb5nYw7TNXj68XX5wkD58b0xT4kCw5UAP')
+    let poolsAdminAddress = Address.parse('kQCMdWZqviYdOeuipr5l9xu-xA8HJfJLZ9GHW3uimjwgmeTJ')
     const poolsAdmin = provider.open(PoolsAdmin.createFromAddress(poolsAdminAddress))
 
 
 
-    // await jettonWallet.sendTransfer(provider.sender(),toNano('0.05'),poolsAdminAddress,toNano('0'),toNano('0'),fowardPayload)
     const client = new TonClient({
         endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
     });
 
     const result = await client.runMethod(Address.parse('kQCnLMweaavOuGVImBm0MmxcLjjBLfG9QvLH8w3Z6IvSOg3_'), "get_wallet_address", [{ type: "slice", cell: beginCell().storeAddress(poolsAdminAddress).endCell() }])
     let jvtWalletAddress = result.stack.readAddress();
+    // await jettonWallet.sendTransfer(provider.sender(),toNano('0.05'),poolsAdminAddress,toNano('0'),toNano('0'),fowardPayload)
+
     // await poolsAdmin.sendChangeJVTWalletAddress(provider.sender(), jvtWalletAddress, toNano('0.02'))
-    await jettonWallet.sendDeployNewPool(provider.sender(), poolsAdminAddress, jvtWalletAddress, toNano('20'))
+    // await jettonWallet.sendDeployNewPool(provider.sender(), poolsAdminAddress, jvtWalletAddress, toNano('0.12'))
+    await jettonWallet.sendAddRewards(provider.sender(),Address.parse('kQDMu8HfnC_hhB7CggYfZIUvY13kJKeXPY6Ah0DQW9oMH0BT'),toNano('20'))
 }

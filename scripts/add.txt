@@ -1,4 +1,4 @@
-poolsadmin: EQB6gLMH5lRzhnuMb5nYw7TNXj68XX5wkD58b0xT4kCw5UAP
+poolsadmin: kQCMdWZqviYdOeuipr5l9xu-xA8HJfJLZ9GHW3uimjwgmeTJ
 master: kQCnLMweaavOuGVImBm0MmxcLjjBLfG9QvLH8w3Z6IvSOg3_
 jetton wallet : kQADhWWL0KntmgvtZo4Omf33dkyGdOaz354rEP42z_Kue6RD
-pooladdress: kQBaikJ2z7zkAFssHOmMrdJws4lLl0wAuGD1-yq1oVV704zB
+pooladdress: kQDMu8HfnC_hhB7CggYfZIUvY13kJKeXPY6Ah0DQW9oMH0BT

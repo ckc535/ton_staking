@@ -1,12 +1,11 @@
 import { Address, Slice, toNano, Cell, beginCell } from '@ton/core';
 import { PoolsAdmin } from '../wrappers/PoolsAdmin';
-import { JettonWallet } from '../wrappers/JettonWallet';
 import { compile, NetworkProvider } from '@ton/blueprint';
 
 export async function run(provider: NetworkProvider) {
     const poolsAdmin = provider.open(PoolsAdmin.createFromConfig({
-        creationFee: 10000000n,  // 0.1 JVT 100000000n
-        changeFee: 100000000n,    // 0.1 JVT
+        creationFee: 12000000n,  // 0.12 JVT 100000000n
+        changeFee: 120000000n,    // 0.12 JVT
         jvtStakingAddress: Address.parse("0QCnLLH_GM4mG9H8e08hh0uKc0-OdplImdq0ETgNstXDj9wE"),
         jvtWalletAddress: Address.parse("kQDV4CjYb6WhGWQFDEuD9XXifh8XEfVwCugSag9b59m2n1nB"),
 

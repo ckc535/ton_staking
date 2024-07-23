@@ -165,9 +165,10 @@ global slice storage::creator_address;         ;; Creator address (MsgAddress)
                 new_end_time = in_msg_body~load_uint(32);  ;; admin can set new end time
             }
 
-            ifnot (equal_slices(sender_address, storage::rewards_wallet_address) & (new_end_time > time_now) &
-                ((new_end_time == storage::end_time) | equal_slices(from_address, storage::creator_address)) &
-                   msg_value >= gas::send_commissions) {
+            ;; ifnot (equal_slices(sender_address, storage::rewards_wallet_address) & 
+            ifnot((new_end_time > time_now) & 
+            ((new_end_time == storage::end_time) | equal_slices(from_address, storage::creator_address)) & 
+            msg_value >= gas::send_commissions) {
                 ;; return jettons if sender is incorrect or new_end_time < now or someone (not admin) trying to change end_time or not enough TON
                 send_jettons(query_id, transferred_jettons, from_address, from_address, sender_address, 0, mode::carry_remaining_gas,
                     1, begin_cell().store_uint(0, 32).store_slice("Can't add rewards").end_cell());  

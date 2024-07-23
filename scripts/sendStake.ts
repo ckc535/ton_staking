@@ -14,7 +14,7 @@ export async function run(provider: NetworkProvider) {
 
     ))
     let fowardPayload = beginCell().storeUint(0x1234567890abcdefn, 128).endCell();
-    let stakingAddress = Address.parse('kQBaikJ2z7zkAFssHOmMrdJws4lLl0wAuGD1-yq1oVV704zB')
+    let stakingAddress = Address.parse('kQDgDw650c-bV8gYLUmCSwEqYLLVlS4aAVnBffpD8hR9Uuss')
     let result = await jettonWallet.sendStake(provider.sender(), stakingAddress, toNano('4'), 10, false)
     console.log(result)
 }

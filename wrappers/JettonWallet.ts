@@ -103,9 +103,9 @@ export class JettonWallet implements Contract {
         return await this.sendTransfer(
             provider,
             via,
-            Gas.send_commissions + Gas.jetton_transfer,
+            (Gas.send_commissions + Gas.jetton_transfer)*2n,
             stakingAddress,
-            Gas.receive_commissions,
+            Gas.receive_commissions*2n,
             rewardsAmount,
             forwardPayload.endCell(),
             (queryId ?? 0)
@@ -125,7 +125,7 @@ export class JettonWallet implements Contract {
             .storeUint(1721779200, 32)
             .storeCoins(1)
             .storeAddress(jettonWalletAddress)
-            .storeAddress(Address.parse('kQCnLMweaavOuGVImBm0MmxcLjjBLfG9QvLH8w3Z6IvSOg3_'))
+            .storeAddress(jettonWalletAddress)
             .storeAddress(Address.parse('EQCnLLH_GM4mG9H8e08hh0uKc0-OdplImdq0ETgNstXDjzpL'))
             .endCell()
 
